@@ -1,7 +1,7 @@
 module.exports = {
 	entry: ['./app/app.js'],
 	output: {
-		filename: 'bundle.js'
+		filename: 'app.js'
 	},
 	module:{
 		rules:[
@@ -13,6 +13,9 @@ module.exports = {
 		]
 	},
 	devServer:{
-		port:8003
+		writeToDisk: true,
+		hot: false,
+		inline: false,
+		port: 3000
 	}
 };

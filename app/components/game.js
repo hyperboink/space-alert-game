@@ -1,12 +1,12 @@
 import * as PIXI from 'pixi.js';
 import assets from './assets';
 import game from './state';
+import { application, firstInit } from '../common/utils';
 import { progress, complete, error, assetLoad, loadScreen } from './loader';
 
-PIXI.utils.skipHello();
-PIXI.settings.ROUND_PIXELS = true;
+firstInit();
 
-game.app = new PIXI.Application({
+game.app = application({
 	width:  window.innerWidth,
 	height:  window.innerHeight
 });

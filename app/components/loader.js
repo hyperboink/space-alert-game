@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import game from './state';
 import settings from '../config';
-import { bar } from '../common/utils';
+import { bar, text, container } from '../common/utils';
 import { start } from '../components/start';
 
 export const progress = (loader, resource) => {
@@ -12,7 +12,7 @@ export const progress = (loader, resource) => {
 
 export const assetLoad = (loader, resource) => {
 	game.screens.loader.removeChild(game.load);
-	game.load = new PIXI.Text('Loading... ' + Math.floor(loader.progress) + '%', {
+	game.load = text('Loading... ' + Math.floor(loader.progress) + '%', {
 		font: settings.fontFamily,
 		fill: 'white',
 		fontSize: 20,
@@ -44,7 +44,7 @@ export const loadScreen = () => {
 	};
 
 	for(screen in game.screens){
-		game.screens[screen] = new PIXI.Container();
+		game.screens[screen] = container();
 		game.app.stage.addChild(game.screens[screen]);
 	}
 }

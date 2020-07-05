@@ -2,6 +2,47 @@ import * as PIXI from 'pixi.js';
 import game from '../components/state';
 import { rectangle } from './draw';
 
+export const application = (props) => {
+	return new PIXI.Application(props);
+}
+
+export const container = () => {
+	return new PIXI.Container();
+}
+
+export const text = (string, style) => {
+	return new PIXI.Text(string, style);
+}
+
+export const sprite = (texture) => {
+	return new PIXI.Sprite(texture);
+}
+
+export const tilingSprite = (texture, width, height) => {
+	return new PIXI.TilingSprite(texture, width, height);
+}
+
+export const svg = (assetUrl, prop) => {
+	return new PIXI.resources.SVGResource(assetUrl, prop);
+}
+
+export const textureSprite = (texture) => {
+	return new PIXI.Texture.from(texture);
+}
+
+export const animatedSprite = (frame) => {
+	return new PIXI.AnimatedSprite(frame);
+}
+
+export const graphics = () => {
+	return new PIXI.Graphics();
+}
+
+export const firstInit = () => {
+	PIXI.utils.skipHello();
+	PIXI.settings.ROUND_PIXELS = true;
+}
+
 export const randomNumber = (min, max, convertToWholeNumber, isRandomDecimal) => {
 	if(convertToWholeNumber){
 		min = Math.ceil(min);

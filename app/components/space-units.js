@@ -1,17 +1,17 @@
 import * as PIXI from 'pixi.js';
 import game from './state';
 import settings from '../config';
-import { storageInt, randomNumber, save } from '../common/utils';
+import { container, storageInt, randomNumber, save, text, sprite, svg, textureSprite, animatedSprite, tilingSprite } from '../common/utils';
 import { collision, center } from '../common/position';
 import { ellipse, rectangle } from '../common/draw';
 import { reset } from './reset';
 import { restart } from './restart';
 
 export const background = () => {
-	let svgRes = new PIXI.resources.SVGResource("images/stars.svg", {scale: 4});
-	let texture = PIXI.Texture.from(svgRes);
+	let svgRes = svg("assets/images/stars.svg", {scale: 4});
+	let texture = textureSprite(svgRes);
 
-	game.background = new PIXI.TilingSprite(
+	game.background = tilingSprite(
 		texture,
 		game.app.screen.width,
 		game.app.screen.height,
@@ -28,7 +28,7 @@ export const spaceship = () => {
 
 	game.distanceLimit = 30;
 
-	game._spaceship = new PIXI.Sprite(texture);
+	game._spaceship = sprite(texture);
 	game._spaceship.x = -30;
 	game._spaceship.y = game.app.screen.height / 2;
 	game._spaceship.anchor.x = 0.5;
@@ -51,10 +51,10 @@ export const spaceshipExplode = () => {
 	let explosionFrame = [];
 
 	for(let i = 0; i < Object.keys(game.app.loader.resources.explosion.data.frames).length; i++){
-		explosionFrame.push(PIXI.Texture.from('explosion_' + i + '.png'));
+		explosionFrame.push(textureSprite('explosion_' + i + '.png'));
 	}
 
-	let animatedExplosion = new PIXI.AnimatedSprite(explosionFrame);
+	let animatedExplosion = animatedSprite(explosionFrame);
 
 	if(settings.life <= 0){
 		game._spaceship.visible = false;
@@ -71,22 +71,16 @@ export const spaceshipExplode = () => {
 	game.screens.main.addChild(animatedExplosion);
 }
 
-export const asteroidsByAlias = (alias, properties) => {
-	let count = settings.asteroids ? settings.asteroids : 50;
-	let props = {
+export const asteroidsByAlias = (alias, props = {
 		extendAliasName: '',
 		extendAliasNameRandomMaxNum: 1,
 		random: false
-	};
+	}) => {
+
+	let count = settings.asteroids ? settings.asteroids : 50;
 	let colissionAllowance = settings.strictCollision ? 2.5 : 3;
 
 	game._asteroids = [];
-
-	for(let property in properties){
-		if(properties[property]){
-			props[property] = properties[property];
-		}
-	}
 
 	for(let asteroidIndex = 0; asteroidIndex < count; asteroidIndex++){
 		let randomSpeed = randomNumber(3, 5);
@@ -94,7 +88,7 @@ export const asteroidsByAlias = (alias, properties) => {
 		let positionX = game.app.screen.width + randomNumber(1, game.app.screen.width)
 		let positionY = randomNumber(1, game.app.screen.height, true);
 		
-		game._asteroids[asteroidIndex] = new PIXI.Sprite(texture);
+		game._asteroids[asteroidIndex] = sprite(texture);
 		game._asteroids[asteroidIndex].x = positionX;
 		game._asteroids[asteroidIndex].y =  positionY;
 		game._asteroids[asteroidIndex].anchor.set(0.5);
@@ -124,22 +118,22 @@ export const life = () => {
 	
 	game.lifeFull = settings.life;
 
-	game.life = new PIXI.Container();
+	game.life = container();
 	game.life.x = 40;
 	game.life.y = 0;
 
-	game.lifeSpaceship = new PIXI.Sprite(texture);
+	game.lifeSpaceship = sprite(texture);
 	game.lifeSpaceship.rotation = -0.5; 
 	game.lifeSpaceship.y = 30; 
 	game.lifeSpaceship.anchor.set(0.5); 
 	game.lifeSpaceship.scale.set(0.6); 
 
-	game.lifeText = new PIXI.Text('', {
+	game.lifeText = text('', {
 		font: 'Segoe UI, sans-serif',
 		fill: 'white',
 		fontSize: 20,
 		letterSpacing: 5
-	});
+	} );
 	game.lifeText.x = 22;
 	game.lifeText.y = 17;
 
@@ -150,7 +144,7 @@ export const life = () => {
 
 export const score = () => {
 	let highestScore = () => {
-		game.score.highest = new PIXI.Text('', {
+		game.score.highest = text('', {
 			font: 'Segoe UI, sans-serif',
 			fill: 'white',
 			fontSize: 14,
@@ -163,7 +157,7 @@ export const score = () => {
 		game.score.highest.count = storageInt('highestScore');
 	};
 
-	game.score = new PIXI.Text('', {
+	game.score = text('', {
 		font: settings.fontFamily,
 		fill: 'white',
 		fontSize: 14,
@@ -184,7 +178,7 @@ export const score = () => {
 export const gameover = () => {
 	let restartTexture = game.app.loader.resources.restart.texture;
 
-	game.button = new PIXI.Sprite(restartTexture);
+	game.button = sprite(restartTexture);
 	game.button.position.y = center(game.button, game.app.screen).y + 20;
 	game.button.width = 50;
 	game.button.height = 50;
@@ -194,7 +188,7 @@ export const gameover = () => {
 	game.button.on('click',  restart);
 	game.screens.end.addChild(game.button);
 
-	game.over = new PIXI.Text('GAMEOVER', {
+	game.over = text('GAMEOVER', {
 		font: 'Segoe UI, sans-serif',
 		fill: 'white',
 		fontSize: 20,
@@ -204,7 +198,7 @@ export const gameover = () => {
 	game.over.anchor.set(0.5);
 	game.screens.end.addChild(game.over);
 
-	game.retry = new PIXI.Text('(CLICK TO RETRY)', {
+	game.retry = text('(CLICK TO RETRY)', {
 		font: '1px sans-serif',
 		fill: 'white',
 		fontSize: 12,

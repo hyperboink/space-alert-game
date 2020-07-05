@@ -1,7 +1,8 @@
 import * as PIXI from 'pixi.js';
+import { graphics } from '../common/utils';
 
 export const ellipse = (x, y, width, height, radius, bg) => {
-	var obj = new PIXI.Graphics();
+	var obj = graphics();
 
 	if(bg) obj.beginFill(bg);
 

@@ -1,4 +1,4 @@
-export default{
+export default {
 	speed: 6.5,
 	backgroundSpeed: 2,
 	life: 5,
